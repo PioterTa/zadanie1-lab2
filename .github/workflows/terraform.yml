@@ -29,3 +29,17 @@ jobs:
     - name: 'Terraform Apply'
       if: github.event_name == 'push'
       run: terraform apply -auto-approve
+
+    - name: 'Save Terraform Outputs'
+      if: github.event_name == 'push'
+      id: save-outputs
+      run: |
+        terraform output -json > tf_outputs.json
+      continue-on-error: true
+
+    - name: 'Upload Terraform Outputs'
+      if: github.event_name == 'push'
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-outputs
+        path: tf_outputs.json
