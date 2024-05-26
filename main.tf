@@ -1,14 +1,10 @@
-# main.tf
-
-provider "aws" {
-  region = var.aws_region
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = "my-localstack-bucket"
+  acl    = "private"
 }
 
-resource "aws_instance" "example_instance" {
-  ami           = var.ami_id
-  instance_type = var.instance_type
-
-  tags = {
-    Name = "ExampleInstance"
-  }
+resource "aws_s3_bucket_object" "example" {
+  bucket = aws_s3_bucket.my_bucket.bucket
+  key    = "example.txt"
+  content = "This is an example file."
 }
