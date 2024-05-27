@@ -1,1 +1,5 @@
-#No variables defined for this simple example
+variable "bucket_name" {
+  description = "The name of the S3 bucket"
+  type        = string
+  default     = "my-localstack-bucket"
+}
