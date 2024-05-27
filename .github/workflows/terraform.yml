@@ -4,14 +4,16 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   terraform:
-    name: Terraform
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Setup Terraform
@@ -19,16 +21,21 @@ jobs:
       with:
         terraform_version: 1.0.0
 
+    - name: Install Localstack
+      run: |
+        pip install localstack awscli-local
+
+    - name: Start Localstack
+      run: localstack start -d
+
     - name: Terraform Init
       run: terraform init
+    
+    - name: Terraform Validate
+      run: terraform validate
 
     - name: Terraform Plan
-      run: terraform plan -out=tfplan
+      run: terraform plan
 
     - name: Terraform Apply
-      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-      run: terraform apply -auto-approve tfplan
-
-    - name: Terraform Destroy
-      if: github.event_name == 'pull_request'
-      run: terraform destroy -auto-approve
+      run: terraform apply -auto-approve
