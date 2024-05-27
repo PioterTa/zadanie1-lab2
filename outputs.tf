@@ -1,3 +1,7 @@
-output "my_bucket_name" {
-  value = aws_s3_bucket_acl.my_bucket_acl.bucket
+output "bucket_name" {
+  value = aws_s3_bucket.my_bucket.bucket
+}
+
+output "bucket_arn" {
+  value = aws_s3_bucket.my_bucket.arn
 }
